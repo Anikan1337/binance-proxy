@@ -70,3 +70,11 @@ app.get('/fdepth', (req, res) => {
   proxyFetch(res, `${BINANCE_FUTURES_BASE}/fapi/v1/depth?symbol=${encodeURIComponent(symbol)}&limit=${encodeURIComponent(limit)}`);
 });
  
+// ---- ДОБАВИТЬ В binance-proxy/server.js ----
+// Вставить рядом с остальными app.get(...) — точность цены инструмента (для авто-подбора шага агрегации)
+ 
+app.get('/info', (req, res) => {
+  const symbol = req.query.symbol;
+  if (!symbol) return res.status(400).json({ error: 'symbol query param is required' });
+  proxyFetch(res, `${BINANCE_BASE}/api/v3/exchangeInfo?symbol=${encodeURIComponent(symbol)}`);
+});
