@@ -58,3 +58,15 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Binance proxy listening on port ${PORT}`);
 });
+// ---- ДОБАВИТЬ В binance-proxy/server.js ----
+// Вставить после app.get('/price', ...) и перед app.get('/', ...)
+ 
+const BINANCE_FUTURES_BASE = 'https://fapi.binance.com';
+ 
+app.get('/fdepth', (req, res) => {
+  const symbol = req.query.symbol;
+  const limit = req.query.limit || '1000';
+  if (!symbol) return res.status(400).json({ error: 'symbol query param is required' });
+  proxyFetch(res, `${BINANCE_FUTURES_BASE}/fapi/v1/depth?symbol=${encodeURIComponent(symbol)}&limit=${encodeURIComponent(limit)}`);
+});
+ 
